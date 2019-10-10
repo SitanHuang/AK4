@@ -1,0 +1,51 @@
+<html>
+<head>
+  <title>AK4</title>
+  <meta charset="UTF-8">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <meta content="IE=edge" http-equiv="X-UA-Compatible">
+  <meta content="webkit" name="renderer">
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="gui/css/normalize.css">
+  <link rel="stylesheet" href="gui/css/style.css">
+
+  <script charset="utf-8" src="gui/external/jquery.js"></script>
+  <script charset="utf-8" src="gui/external/numeral.min.js"></script>
+
+  <script charset="utf-8" src="core/commons.js"></script>
+  <script charset="utf-8" src="core/config.js"></script>
+
+  <script charset="utf-8" src="core/inventory.js"></script>
+  <script charset="utf-8" src="core/sales.js"></script>
+  <script charset="utf-8" src="core/civ.js"></script>
+  <script charset="utf-8" src="core/map.js"></script>
+  <script charset="utf-8" src="core/data.js"></script>
+
+  <script charset="utf-8" src="core/actions.js"></script>
+  <script charset="utf-8" src="core/ai.js"></script>
+</head>
+<body oncontextmenu="return false;">
+  <div class="content">
+    <div class="home"></div>
+  </div>
+  <div class="menu">
+    <div class="home" class="selected" onclick="select_home(this);"><i class="material-icons">timeline</i></div>
+    <div onclick="select_gov(this);"><i class="material-icons">account_balance</i></div>
+    <div onclick="select_trade(this);"><i class="material-icons">compare_arrows</i></div>
+    <div onclick="select_army(this);"><i class="material-icons">supervisor_account</i></div>
+    <div onclick="select_menu(this);"><i class="material-icons">menu</i></div>
+    <div onclick="endTurn();"><i class="material-icons">done</i></div>
+  </div>
+  <script src="gui/interface.js"></script>
+  <script src="gui/home.js"></script>
+  <script src="gui/gov.js"></script>
+  <script src="gui/trade.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+html {
+  touch-action: manipulation;
+}
+
+body {
+  font-family: Roboto, Consolas, 'Roboto Mono', Monaco, Courier, monospace;
+  font-size: 11px;
+  box-sizing: border-box;
+
+  width: 100vw;
+  height: 100vh;
+
+  overflow: hidden;
+
+  user-select: none;
+}
+
+clear {
+  display: block;
+  content: ' ';
+  clear: both;
+  font-size: 0;
+  height: 0;
+}
+
+.content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 51px);
+  overflow: auto;
+  font-size: 14px;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+table {
+  width: 100%;
+  font-size: 14px;
+}
+
+th {
+  text-align: left;
+}
+
+.province {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 1em;
+  border-top: 1px solid grey;
+  font-size: 14px;
+}
+
+.province .res {
+  float: left;
+  width: 50%;
+}
+
+.province:last-child {
+  border-bottom: 1px solid grey;
+}
+
+td {
+  text-align: right;
+}
+
+.status {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 22px;
+  padding: 0 0.5em;
+  font-size: 14px;
+  line-height: 22px;
+  box-sizing: border-box;
+  border-bottom: 1px solid black;
+  background: rgb(229.5, 229.5, 229.5);
+  display: block;
+}
+
+.content > .home {
+  padding-top: 23px;
+}
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+  align-items: stretch;
+  align-content: stretch;
+
+  position: absolute;
+  left: 0;
+  bottom: 0;
+
+  border-top: 1px solid rgba(0, 0, 0, 0.3);
+
+  height: 50px;
+  width: 100vw;
+}
+
+.menu > div {
+  flex-grow: 1;
+  text-align: center;
+  color: black;
+
+  transition: all 300ms ease;
+}
+
+.menu > div.selected {
+  background: rgba(0, 0, 0, 0.3);
+  /* color: white; */
+  line-height: 50px;
+}
+
+.menu > div:active {
+  color: white;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.menu > div * {
+  line-height: 50px;
+}
