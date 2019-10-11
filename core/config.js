@@ -25,7 +25,8 @@ const POPULATION_PER_CATTLES = 6300;
 
 const TURNLY_PRODUCTION_RANGE = 0.1; // plus or minus 10%
 // ========= population growth =========
-const MAX_POP_DECAY = 0.8;
+const MAX_POP_DECAY = 0.35;
+const MAX_POP_GROWTH = 0.04;
 // MAX_POP_GROWTH is dictated by MAXIMUM_CONSUMPTION
 const MINORITY_HAPPINESS_DECREASE_FACTOR = 2;
 // ========= development growth ========

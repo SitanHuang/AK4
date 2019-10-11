@@ -25,7 +25,8 @@ function endTurn() {
 
   if ($_currentPlayer.setAI) {
     ai_think($_currentPlayer);
-    setTimeout(endTurn, 0);
+    // setTimeout(endTurn, 0);
+    endTurn();
   } else {
     initUI();
     if (PLAYER_SET_AI) {

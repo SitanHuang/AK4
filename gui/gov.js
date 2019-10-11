@@ -24,7 +24,9 @@ function select_gov(div) {
     <input value="${available}" style="width: 4em" onclick="this.select();" type="number" step="0.01" min="0" oninput="_changeAvailable('${x}', this)">
     `;
   });
-  html += `</table><br><b>Reserves:</b><br><table>`;
+  html += `</table><br><b>Reserves:</b>
+  <button style="float: right" onclick="ai_adjust_reserve($_currentPlayer);initUI()">Auto</button>
+  <br><table>`;
   RESOURCES.forEach(x => {
     let reserve = player.reserveTarget[x];
     html += `

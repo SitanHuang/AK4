@@ -1,6 +1,32 @@
 function ai_think(civ) {
   ai_think_sales(civ);
   ai_think_gold_budget(civ);
+  ai_adjust_reserve(civ);
+}
+
+/*
+Without strategy:
+820-850, 750-780, 750-780
+*/
+function ai_adjust_reserve(civ) {
+  RESOURCES.forEach(x => {
+    if (x == 'gold') {
+      return;
+    }
+    let supply = civ.inventory.supply[x];
+    let stock = civ.inventory.stockpile[x];
+    let reserve = civ.reserveTarget[x];
+    let demand = civ.inventory.demand[x];
+    let diff = (demand - supply);
+
+    if (demand > supply && stock - diff <= reserve) { // slowly bleed out reserve
+      reserve = (stock - diff * 0.65).min(100).round(2);
+    } else if (demand < supply && stock > reserve * 2 && stock > 100) {
+      reserve = (stock / 2).max(demand * 10).min(100).round(2);
+    }
+
+    civ.reserveTarget[x] = reserve;
+  });
 }
 
 function ai_think_gold_budget(civ) {
@@ -66,10 +92,10 @@ function ai_think_gold_budget(civ) {
       let demand = civ.inventory.demand[res] * (1 + TURNLY_PRODUCTION_RANGE);
       let need = (demand - supply).min(0);
 
-      if (need <= 0) {
-        totalDemandPrice -= seller.sales.priceList[res] * need;
-        return;
-      }
+      // if (need <= 0) {
+      //   totalDemandPrice -= seller.sales.priceList[res] * need;
+      //   return;
+      // }
 
       let gold = seller.sales.calcMaxGold(res)
         .max(seller.sales.priceList[res] * need / totalDemandPrice * budgetForNecessaryImport)
@@ -107,7 +133,7 @@ function ai_think_sales(civ) {
         //   change = civ.sales.priceList[x] * -0.4;
         // } else {
           // sold some or all
-          let rate = (civ.sales._lastSold[x] / civ.sales.available[x] - 0.7);
+          let rate = (civ.sales._lastSold[x] / civ.sales.available[x] - 0.2);
           change = civ.sales.priceList[x] * rate;
         // }
         civ.sales.priceList[x] = (civ.sales.priceList[x] + change).min(0.01).round(2);

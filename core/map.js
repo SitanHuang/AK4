@@ -112,8 +112,8 @@ class Province {
     civ.inventory.stockpile.salt = (civ.inventory.stockpile.salt - usedSalt).min(0);
     civ.inventory.stockpile.cattles = (civ.inventory.stockpile.cattles - usedCattles).min(0);
 
-    let growthRate = Math.max(MAX_POP_DECAY, (usedGrain / baseRateGrain +
-                      usedSalt / baseRateSalt + usedCattles / baseRateCattles) / 3);
+    let growthRate = Math.max(MAX_POP_DECAY, (usedCattles / baseRateCattles + usedGrain / baseRateGrain + usedSalt / baseRateSalt) / 3).max(1 + MAX_POP_GROWTH);
+
     this._growthRate = growthRate;
     this.population *= growthRate;
     this.minority *= growthRate;
@@ -126,6 +126,8 @@ class Province {
     let popPerc = this.population / totalPop;
     let minorityPerc = this.minority / totalPop;
 
+    hapChange += (leftOverGrain / maxGrainSupply + leftOverSalt / maxSaltSupply + leftOverCattles + maxCattlesSupply) / 3000;
+
     if (hapChange < 0)
       hapChange = hapChange * minorityPerc * MINORITY_HAPPINESS_DECREASE_FACTOR + hapChange * popPerc;
 
@@ -134,7 +136,7 @@ class Province {
 
     this.happiness = (this.happiness + hapChange).min(0).max(1);
 
-    if (this.happiness > MIN_HAPPINESS_FOR_DEVELOPMENT && maxLumberSupply && maxIronSupply && growthRate > 1) {
+    if (this.happiness >- MIN_HAPPINESS_FOR_DEVELOPMENT && maxLumberSupply && maxIronSupply && growthRate > 1) {
       let lUsed = maxLumberSupply.max(LUMBER_PER_DEVELOPMENT);
       let iUsed = maxIronSupply.max(IRON_PER_DEVELOPMENT);
       let lRate = (lUsed / LUMBER_PER_DEVELOPMENT).max(1);
@@ -150,9 +152,11 @@ class Province {
       civ.inventory.demand.lumber = lUsed;
       civ.inventory.demand.iron = iUsed;
     }
-    if (growthRate < 1 || this.happiness < 1) {
-      this.development *= Math.min(growthRate, this.happiness).max(1);
-      this.development = this.development.round(2).min(1);
+    if (growthRate < 1) {
+      if (this.happiness < MIN_HAPPINESS_FOR_DEVELOPMENT) {
+        this.development *= this.happiness;
+        this.development = this.development.round(2).min(1);
+      }
 
       let lUsed = (maxLumberSupply * REGULAR_CONSUMPTION).max(LUMBER_PER_DEVELOPMENT);
       let iUsed = (maxIronSupply * REGULAR_CONSUMPTION).max(IRON_PER_DEVELOPMENT);

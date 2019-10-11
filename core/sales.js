@@ -41,7 +41,7 @@ class Sales {
     civ.inventory.stockpile.gold = (civ.inventory.stockpile.gold - gold).min(0).round(2);
     myCiv.inventory.stockpile.gold = (myCiv.inventory.stockpile.gold + gold).round(2);
 
-    return `Bought ${pcs.round(1)}pcs for ${gold.round(1)}.`;
+    return `Bought ${pcs.round(1)}${res} for ${gold.round(1)} total.`;
   }
 
   calcMaxGold(res) {
