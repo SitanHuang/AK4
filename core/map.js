@@ -40,7 +40,7 @@ class Province {
   }
 
   get developmentBuff() {
-    return Math.sqrt(this.development) / 100 + (1-1/100);
+    return Math.sqrt(this.development) / 50 + (1-1/50);
   }
 
   movePop() {
@@ -112,7 +112,7 @@ class Province {
     civ.inventory.stockpile.salt = (civ.inventory.stockpile.salt - usedSalt).min(0);
     civ.inventory.stockpile.cattles = (civ.inventory.stockpile.cattles - usedCattles).min(0);
 
-    let growthRate = Math.max(MAX_POP_DECAY, (usedCattles / baseRateCattles + usedGrain / baseRateGrain + usedSalt / baseRateSalt) / 3).max(1 + MAX_POP_GROWTH);
+    let growthRate = Math.max(MAX_POP_DECAY, Math.min(Math.min(usedCattles / baseRateCattles, usedGrain / baseRateGrain), usedSalt / baseRateSalt)).max(1 + MAX_POP_GROWTH);
 
     this._growthRate = growthRate;
     this.population *= growthRate;
@@ -122,17 +122,19 @@ class Province {
     this.minority = Math.ceil(this.minority);
     let _deltaPop = this.population + this.minority - totalPop;
 
-    let hapChange = growthRate - 1 + 0.01;
+    let hapChange = growthRate - 1 + 0.005;
     let popPerc = this.population / totalPop;
     let minorityPerc = this.minority / totalPop;
 
-    hapChange += (leftOverGrain / maxGrainSupply + leftOverSalt / maxSaltSupply + leftOverCattles + maxCattlesSupply) / 3000;
+    hapChange += (leftOverGrain / (maxGrainSupply + 1) + leftOverSalt / (maxSaltSupply + 1) + leftOverCattles + (maxCattlesSupply + 1)) / 5000;
 
     if (hapChange < 0)
       hapChange = hapChange * minorityPerc * MINORITY_HAPPINESS_DECREASE_FACTOR + hapChange * popPerc;
 
     if (this.happiness >= 0.6 && hapChange > 0)
       hapChange /= 10;
+    
+    if (!hapChange) hapChange = 0; // to prevent NaN
 
     this.happiness = (this.happiness + hapChange).min(0).max(1);
 
@@ -205,9 +207,14 @@ class Province {
   }
   static calcGlobalStats() {
     let res = new ResArray(0);
-    let supply = new ResArray(undefined);
+    let supply = new ResArray(0);
+    let demand = new ResArray(0);
     let pop = 0;
+    let mil = 0;
     let traded = new ResArray(0);
+    let avgPrice = new ResArray(0);
+    let avgPriceCounter = new ResArray(0);
+    
     $provinces.forEach(x => {
       pop += x.population + x.minority;
       RESOURCES.forEach(y => {
@@ -216,21 +223,34 @@ class Province {
     });
 
     $players.forEach(player => {
+      mil += player._military;
       RESOURCES.forEach(y => {
         traded[y] += player.sales._lastSold[y].round();
+        if (player.sales.available[y] > 0 && player.sales.priceList[y] > 0) {
+          avgPrice[y] += player.sales.priceList[y];
+          avgPriceCounter[y] ++;
+        }
+        if (y != 'gold') {
+          demand[y] += player.inventory.demand[y];
+          supply[y] += player.inventory.supply[y];
+        }
       });
     });
 
     RESOURCES.forEach(y => {
       res[y] = res[y].round(1);
-      if (y == 'grain' || y == 'cattles' || y == 'salt')
-        supply[y] = (res[y] * eval(`POPULATION_PER_${y.toUpperCase()}`) / pop).round(2);
+      if (y != 'gold')
+        supply[y] = (supply[y] / demand[y]).round(2);
+      avgPrice[y] = (avgPrice[y] / avgPriceCounter[y]).round(2);
     });
     return {
       pop: pop,
       res: res,
       traded: traded,
-      supply: supply
+      supply: supply,
+      price: avgPrice,
+      mil: mil,
+      milRatio: mil / pop
     };
   }
 }

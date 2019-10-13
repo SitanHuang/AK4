@@ -1,13 +1,39 @@
 function ai_think(civ) {
+  ai_train_army(civ);
   ai_think_sales(civ);
   ai_think_gold_budget(civ);
   ai_adjust_reserve(civ);
 }
 
-/*
-Without strategy:
-820-850, 750-780, 750-780
-*/
+function ai_train_army(civ) {
+  let oldReserveTarget = civ.reserveTarget;
+  civ.reserveTarget = new ResArray(100);
+  
+  civ._milNeed = new ResArray(0);
+    
+  civ.armies.forEach((army, i) => {
+    army.name = `${numeral(Math.floor(i / 3 + 1)).format('0o')} Division ${numeral(i % 3 + 1).format('0o')} Regiment`;
+    prompt_draft_army(army.id);
+    
+    RESOURCES.forEach(x => {
+      if (x == 'grain' || x == 'salt' || x == 'horses' || x == 'iron') {
+        let extra = (civ.inventory.stockpile[x] - civ.reserveTarget[x]).min(0);
+        prompt_equip_army(army.id, x, extra);
+        
+        civ._milNeed[x] += army.maxRes(x) - army[x];
+      }
+    });
+  });
+  
+  civ.reserveTarget = oldReserveTarget;
+  
+  if (civ._military < civ._totalPopulation * 0.08) {    
+    createArmy();
+  } if (civ._military > civ._totalPopulation * 0.11) {
+    removeArmy(civ.armies.sort((a, b) => (a.men - b.men))[0].id);
+  }
+}
+
 function ai_adjust_reserve(civ) {
   RESOURCES.forEach(x => {
     if (x == 'gold') {
@@ -119,7 +145,7 @@ function ai_think_sales(civ) {
     let stockpile = civ.inventory.stockpile[x];
     let reserve = civ.reserveTarget[x];
 
-    if (stockpile > demand + reserve) {
+    if (stockpile > demand + reserve + civ._milNeed[x]) {
       // determine availability
       // civ.sales.available[x] = Math.min(supply - demand, stockpile - reserve).min(0).round(2);
       civ.sales.available[x] = (stockpile - reserve).min(0).round(2);

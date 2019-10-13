@@ -15,6 +15,16 @@ function generateWorld() {
 
     let civ = $players[(i / 2).floor()];
     prov.owner = civ.id;
+    
+    let army = new Army();
+    army.men = 1000;
+    army.grain = army.requiredGrain;
+    army.salt = army.requiredSalt;
+    
+    army.iron = (army.maxIron * Math.random()).round(2);
+    army.horses = (army.maxHorses * Math.random()).round(2);
+    
+    civ.armies.push(army);
   }
 
   $player = $players.sample();

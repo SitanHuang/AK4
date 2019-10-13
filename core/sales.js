@@ -19,7 +19,7 @@ class Sales {
   }
 
   sell(civ, res, gold) {
-    if (DISABLE_TRADES) return;
+    if (DISABLE_TRADES) return 'Trade disabled.';
     let myCiv = $players[this.civ];
 
     let maxGold = civ.inventory.stockpile.gold;

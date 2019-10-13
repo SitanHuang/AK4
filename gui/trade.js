@@ -31,7 +31,8 @@ function createNeighborRow(neighbor) {
   <div class="province">
   <b>${civ.name}</b> at ${prov.name}&nbsp;
   ${numeral(civ._totalPopulation).format('0.[0]a')}&nbsp;
-  Hap <b style="color:#d77c00">${civ._averageHappiness.round(2)}</b><br>&nbsp;`;
+  Hap <b style="color:#d77c00">${civ._averageHappiness.round(2)}</b>&nbsp;
+  P <b style="color:grey">${civ._provinces.round(2)}</b><br><br>`;
   RESOURCES.forEach(x => {
     if (x == 'gold') return;
 

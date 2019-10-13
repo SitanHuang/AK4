@@ -6,7 +6,7 @@ const OCCURENCE = {
   cattles: 0.4,
   lumber: 0.6,
 
-  horses: 0.2,
+  horses: 0.3,
   iron: 0.3,
 
   gold: 0.1
@@ -36,7 +36,12 @@ const MIN_HAPPINESS_FOR_DEVELOPMENT = 0.75;
 const REGULAR_CONSUMPTION = 0.5;
 // ================ civ ================
 const MAX_TAX_RATE = 5;
-
+// =============== army ================
+const FOOD_NEED_MULTIPLIER = 5;
+const FOOD_CONSUMPTION_PER_ROUND = 0.2;
+const MEN_PER_IRON = 1;
+const MEN_PER_HORSES = 2;
+const MAX_MEN_PER_ARMY = 2000;
 // =============== world ===============
 const TOTAL_PROVINCES = 100;
 const TOTAL_CIVS = 50;

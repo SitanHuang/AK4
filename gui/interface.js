@@ -18,10 +18,10 @@ function initUI() {
 function createStatusBar() {
   return `<div class="status">
   <b>${$_currentPlayer.name}</b>
-  Turn <b>${$_turnNumber}</b>
-  Hap <b style="color:#d77c00">${$_currentPlayer._averageHappiness}</b>
+  T <b>${$_turnNumber}</b>
+  Hp <b style="color:#d77c00">${$_currentPlayer._averageHappiness}</b>
   G <b style="color:#999100">${$_currentPlayer.inventory.stockpile.gold}</b> (${numeral($_currentPlayer.inventory.supply.gold).format('+0.[00]')})
-  Pop <span style="color: ${Math.abs($_currentPlayer._populationIncreasePerc) < 0.01 ? '#4b4b4b' : $_currentPlayer._populationIncrease >= 0 ? 'green' : '#a40000'}">${numeral($_currentPlayer._populationIncreasePerc).format('+0.[00]%')}</span>
+  P <span style="color: ${Math.abs($_currentPlayer._populationIncreasePerc) < 0.01 ? '#4b4b4b' : $_currentPlayer._populationIncrease >= 0 ? 'green' : '#a40000'}">${numeral($_currentPlayer._populationIncreasePerc).format('+0.[00]%')}</span>
   </div>`;
 }
 

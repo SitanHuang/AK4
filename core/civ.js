@@ -5,7 +5,7 @@ class Civilization {
     this.setAI = true;
 
     this.inventory = new Inventory();
-    // this.armies = [];
+    this.armies = [];
 
     this.gold = INIT_STOCKPILE * MAX_TAX_RATE;
 
@@ -68,6 +68,10 @@ class Civilization {
     $players.forEach(civ => {
       civ._neighbors = Object.values(civ._neighbors).sort((a, b) => (a.prov.id - b.prov.id));
       civ._oldStockPile = civ.inventory.stockpile.clone();
+      civ.armies.forEach(army => {
+        civ._military += army.men.round();
+        army.consume(civ);
+      });
     });
 
     $provinces.forEach(prov => {
